@@ -40,5 +40,4 @@ services:
       - "8001:8001"
       - "8444:8444"
     depends_on:
-      - kong-database
       - db-migration
