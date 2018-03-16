@@ -1,2 +1,8 @@
 # kong-docker
-Run kong in your service with just one command
+
+Start kong service
+
+```shell
+# ./kong-docker
+docker-compose up
+```

@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  kong-database:
+    image: cassandra:latest
+    ports:
+      - "9042:9042"
+
+  db-migration:
+    image: kong:latest
+    links:
+      - kong-database
+    environment:
+      KONG_DATABASE: "cassandra"
+      KONG_CASSANDRA_CONTACT_POINTS: "kong-database"
+    command: kong migrations up
+    depends_on:
+      - kong-database
+
+  kong:
+    image: kong:latest
+    links:
+      - kong-database
+    environment:
+      KONG_DATABASE: "cassandra"
+      KONG_CASSANDRA_CONTACT_POINTS: "kong-database"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_LISTEN_SSL: "0.0.0.0:8444"
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+    depends_on:
+      - kong-database
+      - db-migration
