@@ -9,19 +9,19 @@ services:
 
   db-migration:
     image: kong:latest
+    command: kong migrations up
     links:
-      - kong-database
+      - kong-database:kong-database
     environment:
       KONG_DATABASE: "cassandra"
       KONG_CASSANDRA_CONTACT_POINTS: "kong-database"
-    command: kong migrations up
     depends_on:
       - kong-database
 
   kong:
     image: kong:latest
     links:
-      - kong-database
+      - kong-database:kong-database
     environment:
       KONG_DATABASE: "cassandra"
       KONG_CASSANDRA_CONTACT_POINTS: "kong-database"
