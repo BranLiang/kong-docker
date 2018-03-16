@@ -6,3 +6,11 @@ Start kong service
 # ./kong-docker
 docker-compose up
 ```
+
+```shell
+docker-compose start db-migration
+```
+
+```shell
+docker-compose start kong
+```
